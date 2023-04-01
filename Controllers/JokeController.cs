@@ -1,7 +1,9 @@
-﻿using Assigment_DadJokes.Model.Response;
+﻿using Assigment_DadJokes.Helper;
+using Assigment_DadJokes.Model.Response;
 using Assigment_DadJokes.Services;
 using Assigment_DadJokes.Services.Impl;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Assigment_DadJokes.Controllers
 {
@@ -11,11 +13,13 @@ namespace Assigment_DadJokes.Controllers
     {
         private readonly ILogger<JokeController> logger; //To be propageted further as per requirement.
         private readonly IJokeCountService jokeCountService;
+        private readonly AppSettings appSettings;
 
-        public JokeController(ILogger<JokeController> logger)
+        public JokeController(ILogger<JokeController> logger, IOptions<AppSettings> options)
         {
             this.logger = logger;
-            jokeCountService = new JokeCountService();
+            appSettings = options.Value;
+            jokeCountService = new JokeCountService(appSettings);
         }
         [HttpGet]
         [Route("count")]
@@ -23,7 +27,6 @@ namespace Assigment_DadJokes.Controllers
         {
             try
             {
-
                 var data = await jokeCountService.getJokeCountAsync();
                 JokeCount jokeCount = new JokeCount();
                 if (data != null)

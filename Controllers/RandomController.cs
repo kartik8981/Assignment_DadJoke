@@ -1,8 +1,10 @@
+using Assigment_DadJokes.Helper;
 using Assigment_DadJokes.Model.Internal.DadJokeAPI.Response;
 using Assigment_DadJokes.Model.Response;
 using Assigment_DadJokes.Services;
 using Assigment_DadJokes.Services.Impl;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace Assigment_DadJokes.Controllers
@@ -13,11 +15,13 @@ namespace Assigment_DadJokes.Controllers
     {
         private readonly ILogger<RandomController> logger; //To be propageted further as per requirement.
         private readonly IRandomJokeService randomJokeService;
+        private readonly AppSettings appSettings;
 
-        public RandomController(ILogger<RandomController> logger)
+        public RandomController(ILogger<RandomController> logger, IOptions<AppSettings> options)
         {
             this.logger = logger;
-            randomJokeService = new RandomJokeService();
+            appSettings = options.Value;
+            randomJokeService = new RandomJokeService(appSettings);
         }
 
         [HttpGet]

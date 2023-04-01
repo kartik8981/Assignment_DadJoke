@@ -8,17 +8,22 @@ namespace Assigment_DadJokes.Services.Impl
 {
     public class RandomJokeService : IRandomJokeService
     {
+        private readonly AppSettings appSettings;
+        public RandomJokeService(AppSettings appSettings)
+        {
+            this.appSettings = appSettings;
+        }
         public async Task<ResDadJokeRandomJoke> getRandomJokeListAsync()
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri(Constant.API_URL_RANDOM_JOKE),
+                RequestUri = new Uri(this.appSettings.ApiRandomJokeUrl),
                 Headers =
             {
-                { Constant.API_HEADER_KEY, Constant.API_KEY_VALUE },
-                { Constant.API_HEADER_HOST, Constant.API_HOST_VALUE },
+                { this.appSettings.ApiHeaderKey, this.appSettings.ApiKeyValue },
+                { this.appSettings.ApiHeaderHost, this.appSettings.ApiHostValue },
             },
             };
             string resultSet = null;

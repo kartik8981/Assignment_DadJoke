@@ -1,23 +1,31 @@
 ﻿using Assigment_DadJokes.Helper;
 using Assigment_DadJokes.Model.Internal.DadJokeAPI.Response;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace Assigment_DadJokes.Services.Impl
 {
     public class JokeCountService : IJokeCountService
     {
+        private readonly AppSettings appSettings;
+        public JokeCountService(AppSettings appSettings)
+        {
+            this.appSettings = appSettings;
+        }
+
         public async Task<ResDadJokeCount> getJokeCountAsync()
         {
+            
             var client = new HttpClient();
             var request = new HttpRequestMessage
 
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri(Constant.API_URL_JOKE_COUNT),
+                RequestUri = new Uri(this.appSettings.ApiJokeCountUrl),
                 Headers =
             {
-                { Constant.API_HEADER_KEY, Constant.API_KEY_VALUE },
-                { Constant.API_HEADER_HOST, Constant.API_HOST_VALUE },
+                { this.appSettings.ApiHeaderKey, this.appSettings.ApiKeyValue },
+                { this.appSettings.ApiHeaderHost, this.appSettings.ApiHostValue },
             },
             };
             string resultSet = null;
